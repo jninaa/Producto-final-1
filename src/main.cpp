@@ -16,7 +16,7 @@ struct Metricas {
 };
 
 // -------------------------------------------------------------
-// 1. INSERTION SORT (Implementado)
+// 1. INSERTION SORT (Inserción Directa - Iterativo)
 // -------------------------------------------------------------
 void insertionSort(vector<int>& arr, Metricas& m) {
     m.comparaciones = 0;
@@ -43,22 +43,64 @@ void insertionSort(vector<int>& arr, Metricas& m) {
 }
 
 // -------------------------------------------------------------
-// 2. MERGE SORT (Pendiente de completar)
+// 2. MERGE SORT (Mezcla - Recursivo)
 // -------------------------------------------------------------
 void merge(vector<int>& arr, int izq, int medio, int der, Metricas& m) {
-    // TODO: Implementar la función de mezcla contando comparaciones e intercambios
+    int n1 = medio - izq + 1;
+    int n2 = der - medio;
+
+    vector<int> L(n1), R(n2);
+    for (int i = 0; i < n1; ++i) L[i] = arr[izq + i];
+    for (int j = 0; j < n2; ++j) R[j] = arr[medio + 1 + j];
+
+    int i = 0, j = 0, k = izq;
+    while (i < n1 && j < n2) {
+        m.comparaciones++;
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        m.intercambios++;
+        k++;
+    }
+
+    while (i < n1) {
+        arr[k] = L[i];
+        i++; k++; m.intercambios++;
+    }
+    while (j < n2) {
+        arr[k] = R[j];
+        j++; k++; m.intercambios++;
+    }
 }
 
 void mergeSortHelper(vector<int>& arr, int izq, int der, Metricas& m, size_t prof_actual) {
-    // TODO: Implementar la división recursiva y medir la profundidad de recursión
+    if (prof_actual > m.profundidad_max_recursion) {
+        m.profundidad_max_recursion = prof_actual;
+    }
+
+    if (izq < der) {
+        int medio = izq + (der - izq) / 2;
+        mergeSortHelper(arr, izq, medio, m, prof_actual + 1);
+        mergeSortHelper(arr, medio + 1, der, m, prof_actual + 1);
+        merge(arr, izq, medio, der, m);
+    }
 }
 
 void mergeSort(vector<int>& arr, Metricas& m) {
-    // TODO: Llamar al helper e inicializar las métricas
+    m.comparaciones = 0;
+    m.intercambios = 0;
+    m.profundidad_max_recursion = 0;
+    if (!arr.empty()) {
+        mergeSortHelper(arr, 0, arr.size() - 1, m, 1);
+    }
 }
 
 // -------------------------------------------------------------
-// Generación de patrones de datos (Implementado)
+// Generación de Patrones de Datos
 // -------------------------------------------------------------
 vector<int> generarPatron(int n, string patron, mt19937& rng) {
     vector<int> vec(n);
@@ -82,38 +124,67 @@ vector<int> generarPatron(int n, string patron, mt19937& rng) {
 }
 
 // -------------------------------------------------------------
-// Función Principal (Estructura base)
+// Función Principal
 // -------------------------------------------------------------
 int main() {
-    // Ajustado únicamente a n = 1000 y n = 10000
+    cout << "=== INICIANDO BENCHMARK DE ALGORITMOS DE ORDENAMIENTO ===" << endl;
+
+    ofstream csv("../results/resultados_benchmark.csv");
+    if (!csv.is_open()) {
+        csv.open("resultados_benchmark.csv");
+    }
+
+    csv << "algoritmo,n,patron,repeticion,tiempo_ms,comparaciones,intercambios,profundidad_recursion\n";
+
     vector<int> tamanos = {1000, 10000};
     vector<string> patrones = {"aleatorio", "ascendente", "descendente", "casi_ordenado", "duplicados"};
     int repeticiones = 10;
     
     mt19937 rng(2026);
 
-    cout << "--- AVANCE DEL BENCHMARK ---" << endl;
-
     for (int n : tamanos) {
+        cout << "\n[SECCION] Procesando tamano n = " << n << endl;
+
         for (string patron : patrones) {
-            cout << "Ejecutando pruebas para n=" << n << ", patron=" << patron << "..." << endl;
-            
+            cout << " -> Evaluando patron: " << patron << "..." << endl;
+
             for (int r = 0; r < repeticiones; ++r) {
                 vector<int> datos_base = generarPatron(n, patron, rng);
 
-                // Prueba de Insertion Sort
-                vector<int> datos_ins = datos_base;
-                Metricas m_ins;
-                auto inicio = chrono::steady_clock::now();
-                insertionSort(datos_ins, m_ins);
-                auto fin = chrono::steady_clock::now();
-                double tiempo_ins = chrono::duration<double, milli>(fin - inicio).count();
+                // Benchmark Insertion Sort
+                {
+                    vector<int> datos = datos_base;
+                    Metricas m;
+                    auto inicio = chrono::steady_clock::now();
+                    insertionSort(datos, m);
+                    auto fin = chrono::steady_clock::now();
+                    double tiempo = chrono::duration<double, milli>(fin - inicio).count();
 
-                // TODO: Ejecutar Merge Sort cuando la función esté completa
-                // TODO: Escribir los resultados en el archivo CSV (results/resultados_benchmark.csv)
+                    csv << "InsertionSort," << n << "," << patron << "," << r << "," 
+                        << tiempo << "," << m.comparaciones << "," << m.intercambios << "," 
+                        << m.profundidad_max_recursion << "\n";
+                }
+
+                // Benchmark Merge Sort
+                {
+                    vector<int> datos = datos_base;
+                    Metricas m;
+                    auto inicio = chrono::steady_clock::now();
+                    mergeSort(datos, m);
+                    auto fin = chrono::steady_clock::now();
+                    double tiempo = chrono::duration<double, milli>(fin - inicio).count();
+
+                    csv << "MergeSort," << n << "," << patron << "," << r << "," 
+                        << tiempo << "," << m.comparaciones << "," << m.intercambios << "," 
+                        << m.profundidad_max_recursion << "\n";
+                }
             }
         }
     }
 
+    csv.close();
+    cout << "\n=== BENCHMARK FINALIZADO EXITOSAMENTE ===" << endl;
+    cout << "Resultados guardados en el archivo CSV." << endl;
+    
     return 0;
 }
