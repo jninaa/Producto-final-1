@@ -18,7 +18,7 @@ Este proyecto realiza un analisis comparativo y empirico entre dos algoritmos de
     |-- resultados_benchmark.csv  # Resultados de los experimentos
 ```
    
-    Metodologia Experimental
+## Metodologia Experimental
 1. Algoritmos Evaluados
 
     Insertion Sort: Algoritmo iterativo in-situ. Su complejidad espacial es O(1) y su complejidad temporal varia entre O(n) (mejor caso) y O(n^2) (peor y promedio caso).
