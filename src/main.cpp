@@ -7,7 +7,7 @@
 #include <string>
 
 using namespace std;
-using namespace std:chrono;
+using namespace std::chrono;
 
 // Estructura para registrar los contadores de métricas
 struct Metricas {
