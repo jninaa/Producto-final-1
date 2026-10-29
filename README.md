@@ -2,6 +2,7 @@
 
 Este proyecto realiza un analisis comparativo y empirico entre dos algoritmos de ordenamiento interno: **Insertion Sort** (Insercion directa, cuadratico) y **Merge Sort** (Mezcla, logaritmico). El objetivo es evaluar su rendimiento en funcion del tamaño de los datos y su disposicion inicial (patrones de orden).
 
+https://youtu.be/d-wHjcQG16c
 ---
 
 ## Estructura del Repositorio
