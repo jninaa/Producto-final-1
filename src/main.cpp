@@ -7,6 +7,7 @@
 #include <string>
 
 using namespace std;
+using namespace std:chrono;
 
 // Estructura para registrar los contadores de métricas
 struct Metricas {
@@ -155,10 +156,10 @@ int main() {
                 {
                     vector<int> datos = datos_base;
                     Metricas m;
-                    auto inicio = chrono::steady_clock::now();
+                    auto inicio = steady_clock::now();
                     insertionSort(datos, m);
-                    auto fin = chrono::steady_clock::now();
-                    double tiempo = chrono::duration<double, milli>(fin - inicio).count();
+                    auto fin = steady_clock::now();
+                    double tiempo = duration<double, milli>(fin - inicio).count();
 
                     csv << "InsertionSort," << n << "," << patron << "," << r << "," 
                         << tiempo << "," << m.comparaciones << "," << m.intercambios << "," 
@@ -169,10 +170,10 @@ int main() {
                 {
                     vector<int> datos = datos_base;
                     Metricas m;
-                    auto inicio = chrono::steady_clock::now();
+                    auto inicio = steady_clock::now();
                     mergeSort(datos, m);
-                    auto fin = chrono::steady_clock::now();
-                    double tiempo = chrono::duration<double, milli>(fin - inicio).count();
+                    auto fin = steady_clock::now();
+                    double tiempo = duration<double, milli>(fin - inicio).count();
 
                     csv << "MergeSort," << n << "," << patron << "," << r << "," 
                         << tiempo << "," << m.comparaciones << "," << m.intercambios << "," 
