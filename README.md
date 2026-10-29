@@ -1,4 +1,4 @@
-# Comparación de Algoritmos de Ordenamiento: Insertion Sort vs Merge Sort
+# Comparacion de Algoritmos de Ordenamiento: Insertion Sort vs Merge Sort
 
 Este proyecto realiza un analisis comparativo y empirico entre dos algoritmos de ordenamiento interno: **Insertion Sort** (Insercion directa, cuadratico) y **Merge Sort** (Mezcla, logaritmico). El objetivo es evaluar su rendimiento en funcion del tamaño de los datos y su disposicion inicial (patrones de orden).
 
@@ -12,14 +12,11 @@ Este proyecto realiza un analisis comparativo y empirico entre dos algoritmos de
 |-- .gitignore             # Archivos omitidos por Git
 |-- docs/                  # Documentos del proyecto
 |   |-- manuscrito.pdf     # Articulo cientifico en formato COMTEL / APA 7
-|   |-- diapositiva.pdf    # Presentacion para la sustentacion
-|-- include/               # Archivos de cabecera (interfaces comunes)
 |-- src/
 |   |-- main.cpp           # Codigo fuente del benchmark en C++
-|-- data/                  # Archivos de datos o instancias de entrada
 |-- results/
     |-- resultados_benchmark.csv  # Resultados de los experimentos
-
+```
    
     Metodologia Experimental
 1. Algoritmos Evaluados
